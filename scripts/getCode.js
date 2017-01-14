@@ -1,15 +1,18 @@
+
 // Get code from screeps api.
 
 const request = require('superagent')
 const prompt = require('prompt')
+const child_process = require('child_process')
+const fs = require('fs')
 
 console.log('Get Screeps code!')
 
 try {
-  const config = require('../configs.json')
+  const config = require('../config.json')
 
   // Use local config file for auth.
-  getData(config.username, config.result)
+  getData(config.username, config.password)
 } catch (e) {
   // Get auth from command line input.
   prompt.start()
@@ -61,9 +64,61 @@ function processData (data) {
   console.log(`modules (${moduleKeys.length}):`)
 
   moduleKeys.forEach((key) => {
-    const file = data.modules[key]
-    console.log(`  ${key}: ${linesOfCode(file)} LOC`)
-    // console.log(file)
+    const module = data.modules[key]
+    console.log(`  ${key}: ${linesOfCode(module)} LOC`)
+  })
+  console.log('')
+
+  if (checkForMatchingBranch(data.branch) && !checkForDirtyBranch()) {
+    writeModules(data.modules)
+  }
+}
+
+function checkForMatchingBranch (branch) {
+  const expectedBranch = branch === 'default' ? 'master' : branch
+
+  let currentBranch = child_process.execSync('git symbolic-ref HEAD')
+    .toString()
+  currentBranch = currentBranch.trim().match(/\w+$/)[0]
+
+  const matchingBranch = expectedBranch === currentBranch
+
+  if (!matchingBranch) {
+    console.log('You are not on a matching branch.')
+    console.log(`You are on branch ${currentBranch}.`)
+    console.log(`Switch to branch ${expectedBranch} and try again.`)
+  } else {
+    console.log(`You are on the matching branch ${expectedBranch}.`)
+  }
+
+  return matchingBranch
+}
+
+function checkForDirtyBranch () {
+  let dirtyBranch = child_process.execSync('git status --porcelain')
+      .toString()
+  dirtyBranch = dirtyBranch.length > 0
+
+  if (dirtyBranch) {
+    console.log('You have unsaved changes in your branch.')
+    console.log('Commit or stash your changes before updating from screeps.')
+  }
+
+  return dirtyBranch
+}
+
+function writeModules (modules) {
+  const srcDir = 'src'
+  console.log('')
+  console.log(`writing modules to ${srcDir} dir...`)
+
+  const moduleKeys = Object.keys(modules)
+  moduleKeys.forEach((key) => {
+    const module = modules[key]
+    console.log(`writing ${key} (${linesOfCode(module)} LOC)...`)
+    const filename = `${srcDir}/${key}.js`
+
+    fs.writeFileSync(filename, module)
   })
 }
 
