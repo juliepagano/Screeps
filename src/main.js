@@ -1,11 +1,15 @@
 var logHelper = require('helper.log');
 var creepHelper = require('helper.creep');
 
+var creepManagerLib = require('manager.creep')
+
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 
 module.exports.loop = function () {
+
+    var creepManager = new creepManagerLib()
 
     var spawns = Game.spawns
     var spawnCount = 0
