@@ -76,7 +76,7 @@ function setData (username, password) {
 function getCurrentBranch() {
   let currentBranch = child_process.execSync('git symbolic-ref HEAD')
     .toString()
-  currentBranch = currentBranch.trim().match(/\w+$/)[0]
+  currentBranch = currentBranch.trim().match(/[A-Za-z0-9_\-]+$/)[0]
   return currentBranch
 }
 
