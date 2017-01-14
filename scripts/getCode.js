@@ -1,4 +1,3 @@
-
 // Get code from screeps api.
 
 const request = require('superagent')
@@ -74,12 +73,16 @@ function processData (data) {
   }
 }
 
-function checkForMatchingBranch (branch) {
-  const expectedBranch = branch === 'default' ? 'master' : branch
-
+function getCurrentBranch() {
   let currentBranch = child_process.execSync('git symbolic-ref HEAD')
     .toString()
   currentBranch = currentBranch.trim().match(/\w+$/)[0]
+  return currentBranch
+}
+
+function checkForMatchingBranch (branch) {
+  const expectedBranch = branch === 'default' ? 'master' : branch
+  let currentBranch = getCurrentBranch()
 
   const matchingBranch = expectedBranch === currentBranch
 
