@@ -1,5 +1,9 @@
 var logHelper = require('helper.log');
 
+var roleHarvester = require('role.harvester');
+var roleUpgrader = require('role.upgrader');
+var roleBuilder = require('role.builder');
+
 var bodyCosts = {}
 bodyCosts[MOVE] = 50
 bodyCosts[WORK] = 100
@@ -9,13 +13,16 @@ let creepManager = class creepManager {
   constructor (creeps) {
     this.creepRoles = {
       harvester: {
-        max: 2
+        max: 2,
+        commands: roleHarvester
       },
       upgrader: {
-        max: 2
+        max: 2,
+        commands: roleUpgrader
       },
       builder: {
-        max: 2
+        max: 2,
+        commands: roleBuilder
       }
     }
 
@@ -40,6 +47,25 @@ let creepManager = class creepManager {
         this.creepRoles[role].count = 1
       } else {
         this.creepRoles[role].count += 1
+      }
+
+      if (!this.creepRoles[role].creeps) {
+        this.creepRoles[role].creeps = []
+      }
+      this.creepRoles[role].creeps.push(creep)
+    }
+  }
+
+  runCreeps () {
+    for (let role in this.creepRoles) {
+      let roleCreeps = this.creepRoles[role].creeps
+      let commands = this.creepRoles[role].commands
+
+      if (roleCreeps && commands) {
+        for (let i = 0; i < roleCreeps.length; i++) {
+          let creep = roleCreeps[i]
+          commands.run(creep)
+        }
       }
     }
   }

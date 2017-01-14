@@ -1,5 +1,4 @@
 var logHelper = require('helper.log');
-var creepHelper = require('helper.creep');
 
 var creepManagerLib = require('manager.creep')
 
@@ -36,16 +35,5 @@ module.exports.loop = function () {
     creepManager.maybeSpawn(activeSpawn, creepBody, 'upgrader')
     creepManager.maybeSpawn(activeSpawn, creepBody, 'builder')
 
-    for(var name in Game.creeps) {
-        var creep = Game.creeps[name];
-        if(creep.memory.role == 'harvester') {
-            roleHarvester.run(creep);
-        }
-        if(creep.memory.role == 'upgrader') {
-            roleUpgrader.run(creep);
-        }
-        if(creep.memory.role == 'builder') {
-            roleBuilder.run(creep);
-        }
-    }
+    creepManager.runCreeps()
 }
