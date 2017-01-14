@@ -53,13 +53,13 @@ function setData (username, password) {
   }
 
   if (!checkForDirtyBranch()) {
-    console.log('sending data...')
+    console.log('')
+    console.log(`sending data to branch ${screepsBranch}...`)
     request
       .post('https://screeps.com/api/user/code')
       .auth(username, password)
       .send(data)
       .then((res) => {
-        console.log(res.body)
         if (res.body && res.body.ok) {
           console.log('Successful update!')
         } else {
