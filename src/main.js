@@ -1,4 +1,5 @@
 var logHelper = require('helper.log');
+var creepHelper = require('helper.creep');
 
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
@@ -26,6 +27,7 @@ module.exports.loop = function () {
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     logHelper.log('Harvesters: ' + harvesters.length);
 
+    console.log('harvester cost: ' + creepHelper.getCost([WORK,CARRY,MOVE]))
     if(harvesters.length < 2) {
         var newName = Game.spawns['Spawn1'].createCreep([WORK,CARRY,MOVE], undefined, {role: 'harvester'});
         logHelper.log('Spawning new harvester: ' + newName);
