@@ -7,9 +7,9 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 
-module.exports.loop = function () {
 
-    var creepManager = new creepManagerLib()
+module.exports.loop = function () {
+    var creepManager = new creepManagerLib(Game.creeps)
 
     var spawns = Game.spawns
     var spawnCount = 0
@@ -28,31 +28,13 @@ module.exports.loop = function () {
         }
     }
 
-    var activeSpawn = 'Spawn1'
+    var activeSpawnName = 'Spawn1'
+    var activeSpawn = Game.spawns[activeSpawnName]
 
-    var harvesters = creepHelper.getCreepsByRole('harvester');
-    logHelper.log('Harvesters: ' + harvesters.length);
-
-    if(harvesters.length < 2) {
-        var newName = Game.spawns[activeSpawn].createCreep([WORK,CARRY,MOVE], undefined, {role: 'harvester'});
-        logHelper.log('Spawning new harvester: ' + newName);
-    }
-
-    var upgraders = creepHelper.getCreepsByRole('upgrader');
-    logHelper.log('Upgraders: ' + upgraders.length);
-
-    if(upgraders.length < 1) {
-        var newName = Game.spawns[activeSpawn].createCreep([WORK,CARRY,MOVE], undefined, {role: 'upgrader'});
-        logHelper.log('Spawning new upgrader: ' + newName);
-    }
-
-    var builders = creepHelper.getCreepsByRole('builder');
-    logHelper.log('Builders: ' + builders.length);
-
-    if(builders.length < 1) {
-        var newName = Game.spawns[activeSpawn].createCreep([WORK,CARRY,MOVE], undefined, {role: 'builder'});
-        logHelper.log('Spawning new builder: ' + newName);
-    }
+    let creepBody = [WORK,CARRY,MOVE]
+    creepManager.maybeSpawn(activeSpawn, creepBody, 'harvester')
+    creepManager.maybeSpawn(activeSpawn, creepBody, 'upgrader')
+    creepManager.maybeSpawn(activeSpawn, creepBody, 'builder')
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
