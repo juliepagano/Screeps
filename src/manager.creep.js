@@ -15,15 +15,15 @@ let creepManager = class creepManager {
   constructor (creeps) {
     this.creepRoles = {
       harvester: {
-        max: 3,
+        max: 4,
         commands: roleHarvester
       },
       upgrader: {
-        max: 3,
+        max: 4,
         commands: roleUpgrader
       },
       builder: {
-        max: 3,
+        max: 4,
         commands: roleBuilder
       }
     }
