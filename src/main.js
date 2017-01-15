@@ -2,6 +2,7 @@ var logHelper = require('helper.log');
 
 var creepManagerLib = require('manager.creep')
 var constructionManagerLib = require('manager.construction')
+var spawnManagerLib = require('manager.spawn')
 
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
@@ -37,16 +38,7 @@ module.exports.loop = function () {
 
     let activeSpawnName = 'Spawn1'
     let activeSpawn = Game.spawns[activeSpawnName]
-    let spawnSummary = `Active spawn: ${activeSpawnName} (${activeSpawn.energy})`
-    if (activeSpawn.spawning) {
-      let name = activeSpawn.spawning.name
-      let needTime = activeSpawn.spawning.needTime
-      let remainingTime = activeSpawn.spawning.remainingTime
-      let percentComplete = (needTime - remainingTime) / needTime * 100
-
-      spawnSummary += ` (spawning ${name} ${percentComplete.toFixed(2)}%)`
-    }
-    logHelper.log(spawnSummary, LOG_LEVEL.INFO)
+    let spawnManager = new spawnManagerLib(activeSpawn)
 
     let constructionManager = new constructionManagerLib(activeRoom)
     var creepManager = new creepManagerLib(Game.creeps)
