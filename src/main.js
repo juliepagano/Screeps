@@ -15,7 +15,7 @@ module.exports.loop = function () {
 
     let activeRoomName = 'W17N76'
     let activeRoom = Game.rooms[activeRoomName]
-    logHelper.log(`Active room: ${activeRoomName}.`, LOG_LEVEL.INFO)
+    logHelper.log(`Active room: ${activeRoomName} (${activeRoom.mode}).`, LOG_LEVEL.INFO)
 
     let activeController = activeRoom.controller
     if (activeController) {
@@ -59,10 +59,13 @@ module.exports.loop = function () {
 
     var creepManager = new creepManagerLib(Game.creeps)
 
-    let creepBody = [WORK, CARRY, MOVE, MOVE, MOVE]
+    let creepBody = [WORK, CARRY, CARRY, MOVE, MOVE, MOVE]
     creepManager.maybeSpawn(activeSpawn, creepBody, 'harvester')
     creepManager.maybeSpawn(activeSpawn, creepBody, 'upgrader')
     creepManager.maybeSpawn(activeSpawn, creepBody, 'builder')
 
     creepManager.runCreeps()
+
+    logHelper.log('====================================================',
+        LOG_LEVEL.INFO)
 }

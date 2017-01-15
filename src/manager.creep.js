@@ -15,15 +15,15 @@ let creepManager = class creepManager {
   constructor (creeps) {
     this.creepRoles = {
       harvester: {
-        max: 5,
+        max: 6,
         commands: roleHarvester
       },
       upgrader: {
-        max: 4,
+        max: 6,
         commands: roleUpgrader
       },
       builder: {
-        max: 5,
+        max: 6,
         commands: roleBuilder
       }
     }
@@ -123,8 +123,9 @@ let creepManager = class creepManager {
     }
 
     let bodyCost = this.getBodyCost(body)
-    if (bodyCost > spawn.energy) {
-      logHelper.log(`Not enough energy to spawn ${role}. Have ${spawn.energy}. Need ${bodyCost}`)
+    let availableEnergy = spawn.room.energyAvailable
+    if (bodyCost > availableEnergy) {
+      logHelper.log(`Not enough energy to spawn ${role}. Have ${availableEnergy}. Need ${bodyCost}`)
       return
     }
 
