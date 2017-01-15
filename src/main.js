@@ -29,9 +29,18 @@ module.exports.loop = function () {
       logHelper.log(controllerSummary, LOG_LEVEL.INFO)
     }
 
-    var activeSpawnName = 'Spawn1'
-    var activeSpawn = Game.spawns[activeSpawnName]
-    logHelper.log(`Active spawn: ${activeSpawnName}.`, LOG_LEVEL.INFO)
+    let activeSpawnName = 'Spawn1'
+    let activeSpawn = Game.spawns[activeSpawnName]
+    let spawnSummary = `Active spawn: ${activeSpawnName}`
+    if (activeSpawn.spawning) {
+      let needTime = activeSpawn.spawning.needTime
+      let remainingTime = activeSpawn.spawning.remainingTime
+      let percentComplete = (needTime - remainingTime) / remainingTime * 100
+
+      spawnSummary += ` (spawning ${percentComplete.toFixed(2)}%)`
+      console.log(JSON.stringify(activeSpawn.spawning))
+    }
+    logHelper.log(spawnSummary, LOG_LEVEL.INFO)
 
     var creepManager = new creepManagerLib(Game.creeps)
 
@@ -45,7 +54,7 @@ module.exports.loop = function () {
 
     logHelper.log(`${spawnCount} spawns with total energy ${spawnEnergy}.`, LOG_LEVEL.INFO)
 
-    let creepBody = [WORK,CARRY,MOVE]
+    let creepBody = [WORK, CARRY, MOVE, MOVE, MOVE]
     creepManager.maybeSpawn(activeSpawn, creepBody, 'harvester')
     creepManager.maybeSpawn(activeSpawn, creepBody, 'upgrader')
     creepManager.maybeSpawn(activeSpawn, creepBody, 'builder')

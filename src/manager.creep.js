@@ -15,7 +15,7 @@ let creepManager = class creepManager {
   constructor (creeps) {
     this.creepRoles = {
       harvester: {
-        max: 4,
+        max: 5,
         commands: roleHarvester
       },
       upgrader: {
@@ -23,7 +23,7 @@ let creepManager = class creepManager {
         commands: roleUpgrader
       },
       builder: {
-        max: 4,
+        max: 5,
         commands: roleBuilder
       }
     }
@@ -82,9 +82,11 @@ let creepManager = class creepManager {
   getCreepSummary () {
     let creepSummary = `Creeps: total (${this.totalCreeps})`
     for (let role in this.creepRoles) {
-      let roleCreeps = this.creepRoles[role].creeps
+      let creepRole = this.creepRoles[role]
+      let roleCreeps = creepRole.creeps
+      let maxCreeps = creepRole.max || 0
       if (roleCreeps && roleCreeps.length) {
-        creepSummary += `, ${role} (${roleCreeps.length})`
+        creepSummary += `, ${role} (${roleCreeps.length}/${maxCreeps})`
       }
     }
     return creepSummary
