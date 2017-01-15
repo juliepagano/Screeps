@@ -5,6 +5,7 @@ var creepManagerLib = require('manager.creep')
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
+var roleRepairer = require('role.repairer');
 
 const LOG_LEVEL = require('constants.log')
 
@@ -63,6 +64,7 @@ module.exports.loop = function () {
     creepManager.maybeSpawn(activeSpawn, creepBody, 'harvester')
     creepManager.maybeSpawn(activeSpawn, creepBody, 'upgrader')
     creepManager.maybeSpawn(activeSpawn, creepBody, 'builder')
+    creepManager.maybeSpawn(activeSpawn, creepBody, 'repairer')
 
     creepManager.runCreeps()
 

@@ -3,6 +3,7 @@ var logHelper = require('helper.log');
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
+var roleRepairer = require('role.repairer');
 
 const LOG_LEVEL = require('constants.log')
 
@@ -19,12 +20,16 @@ let creepManager = class creepManager {
         commands: roleHarvester
       },
       upgrader: {
-        max: 6,
+        max: 4,
         commands: roleUpgrader
       },
       builder: {
-        max: 6,
+        max: 4,
         commands: roleBuilder
+      },
+      repairer: {
+        max: 1,
+        commands: roleRepairer
       }
     }
 
@@ -85,9 +90,8 @@ let creepManager = class creepManager {
       let creepRole = this.creepRoles[role]
       let roleCreeps = creepRole.creeps
       let maxCreeps = creepRole.max || 0
-      if (roleCreeps && roleCreeps.length) {
-        creepSummary += `, ${role} (${roleCreeps.length}/${maxCreeps})`
-      }
+      let totalCreeps = roleCreeps ? roleCreeps.length : 0
+      creepSummary += `, ${role} (${totalCreeps}/${maxCreeps})`
     }
     return creepSummary
   }
