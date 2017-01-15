@@ -26,33 +26,38 @@ module.exports.loop = function () {
       controllerSummary += `(${progress.toFixed(2)}%), `
       controllerSummary += `downgrading in ${activeController.ticksToDowngrade}`
 
+      if (activeController.safeMode) {
+        controllerSummary += `, safe mode for ${activeController.safeMode}`
+      }
+
       logHelper.log(controllerSummary, LOG_LEVEL.INFO)
     }
 
     let activeSpawnName = 'Spawn1'
     let activeSpawn = Game.spawns[activeSpawnName]
-    let spawnSummary = `Active spawn: ${activeSpawnName}`
+    let spawnSummary = `Active spawn: ${activeSpawnName} (${activeSpawn.energy})`
     if (activeSpawn.spawning) {
+      let name = activeSpawn.spawning.name
       let needTime = activeSpawn.spawning.needTime
       let remainingTime = activeSpawn.spawning.remainingTime
-      let percentComplete = (needTime - remainingTime) / remainingTime * 100
+      let percentComplete = (needTime - remainingTime) / needTime * 100
 
-      spawnSummary += ` (spawning ${percentComplete.toFixed(2)}%)`
-      console.log(JSON.stringify(activeSpawn.spawning))
+      spawnSummary += ` (spawning ${name} ${percentComplete.toFixed(2)}%)`
     }
     logHelper.log(spawnSummary, LOG_LEVEL.INFO)
 
-    var creepManager = new creepManagerLib(Game.creeps)
+    let activeContructionSites = activeRoom.find(FIND_MY_CONSTRUCTION_SITES)
+    if (activeContructionSites.length) {
+      let constructionSummary = `Active construction: total (${activeContructionSites.length})`
+      activeContructionSites.forEach((site) => {
+        let progress = site.progress / site.progressTotal * 100
+        constructionSummary += `, ${site.structureType} (${progress.toFixed(2)}%)`
+      })
 
-    var spawns = Game.spawns
-    var spawnCount = 0
-    var spawnEnergy = 0
-    for (var name in spawns) {
-        spawnCount++
-        spawnEnergy += spawns[name].energy
+      logHelper.log(constructionSummary, LOG_LEVEL.INFO)
     }
 
-    logHelper.log(`${spawnCount} spawns with total energy ${spawnEnergy}.`, LOG_LEVEL.INFO)
+    var creepManager = new creepManagerLib(Game.creeps)
 
     let creepBody = [WORK, CARRY, MOVE, MOVE, MOVE]
     creepManager.maybeSpawn(activeSpawn, creepBody, 'harvester')
