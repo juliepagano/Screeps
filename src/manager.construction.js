@@ -24,7 +24,7 @@ let constructionManager = class constructionManager {
       summary += `, ${site.structureType} (${progress.toFixed(2)}%)`
     })
 
-    logHelper.log(summary, LOG_LEVEL.INFO)
+    return summary
   }
 }
 

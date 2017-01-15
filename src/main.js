@@ -1,7 +1,8 @@
 var logHelper = require('helper.log');
 
-var creepManagerLib = require('manager.creep')
 var constructionManagerLib = require('manager.construction')
+var ControllerManagerLib = require('manager.controller')
+var creepManagerLib = require('manager.creep')
 var spawnManagerLib = require('manager.spawn')
 
 var roleHarvester = require('role.harvester');
@@ -20,21 +21,7 @@ module.exports.loop = function () {
     let activeRoom = Game.rooms[activeRoomName]
     logHelper.log(`Active room: ${activeRoomName} (${activeRoom.mode}).`, LOG_LEVEL.INFO)
 
-    let activeController = activeRoom.controller
-    if (activeController) {
-      let progress = activeController.progress / activeController.progressTotal * 100
-
-      let controllerSummary = 'Active controller: '
-      controllerSummary += `level ${activeController.level} `
-      controllerSummary += `(${progress.toFixed(2)}%), `
-      controllerSummary += `downgrading in ${activeController.ticksToDowngrade}`
-
-      if (activeController.safeMode) {
-        controllerSummary += `, safe mode for ${activeController.safeMode}`
-      }
-
-      logHelper.log(controllerSummary, LOG_LEVEL.INFO)
-    }
+    let controllerManager = new ControllerManagerLib(activeRoom)
 
     let activeSpawnName = 'Spawn1'
     let activeSpawn = Game.spawns[activeSpawnName]
