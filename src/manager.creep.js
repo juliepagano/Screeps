@@ -4,6 +4,8 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 
+const LOG_LEVEL = require('constants.log')
+
 var bodyCosts = {}
 bodyCosts[MOVE] = 50
 bodyCosts[WORK] = 100
@@ -27,15 +29,23 @@ let creepManager = class creepManager {
     }
 
     this.creeps = creeps
+    this.totalCreeps = 0
+
+    this.cleanupZombieCreeps(creeps)
     this.initCreeps(creeps)
 
-    logHelper.log(JSON.stringify(this.creepRoles))
+    logHelper.log(JSON.stringify(this.creepRoles), LOG_LEVEL.DEBUG)
+
+
+    logHelper.log(this.getCreepSummary(), LOG_LEVEL.INFO)
   }
 
   initCreeps (creeps) {
     for (let name in creeps) {
       let creep = creeps[name]
       let role = creep.memory.role
+
+      this.totalCreeps++
 
       if (!this.creepRoles[role]) {
         this.creepRoles[role] = {
@@ -54,6 +64,30 @@ let creepManager = class creepManager {
       }
       this.creepRoles[role].creeps.push(creep)
     }
+  }
+
+  cleanupZombieCreeps (creeps) {
+    const memoryCreepNames = _.keys(Memory.creeps)
+    const gameCreepNames = _.keys(creeps)
+    const zombieNames = _.difference(memoryCreepNames, gameCreepNames)
+
+    logHelper.log(`${zombieNames.length} zombies: ${zombieNames.join(', ')}`,
+      LOG_LEVEL.DEBUG)
+    zombieNames.forEach((name) => {
+      delete Memory.creeps[name]
+      logHelper.log(`Cleared zombie creep: ${name}`, LOG_LEVEL.DEBUG);
+    })
+  }
+
+  getCreepSummary () {
+    let creepSummary = `Creeps: total (${this.totalCreeps})`
+    for (let role in this.creepRoles) {
+      let roleCreeps = this.creepRoles[role].creeps
+      if (roleCreeps && roleCreeps.length) {
+        creepSummary += `, ${role} (${roleCreeps.length})`
+      }
+    }
+    return creepSummary
   }
 
   runCreeps () {
@@ -97,12 +131,13 @@ let creepManager = class creepManager {
       let response = spawn.createCreep(body, undefined, { role: role })
 
       if (typeof response === 'string') {
-        logHelper.log(`Successfully created new ${role} creep named ${response}.`)
+        logHelper.log(`Successfully created new ${role} creep named ${response}.`,
+          LOG_LEVEL.INFO)
         return
       }
     }
 
-    logHelper.log(`Something went wrong creating ${role} creep.`)
+    logHelper.log(`Something went wrong creating ${role} creep.`, LOG_LEVEL.ERROR)
   }
 
   shouldSpawnMore (role) {
@@ -117,7 +152,7 @@ let creepManager = class creepManager {
 
   getCreepCount (role) {
     if (!role) {
-      return this.creeps.length
+      return this.totalCreeps
     }
 
     if (this.creepRoles[role]) {
