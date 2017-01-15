@@ -1,6 +1,7 @@
 var logHelper = require('helper.log');
 
 var creepManagerLib = require('manager.creep')
+var constructionManagerLib = require('manager.construction')
 
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
@@ -47,20 +48,10 @@ module.exports.loop = function () {
     }
     logHelper.log(spawnSummary, LOG_LEVEL.INFO)
 
-    let activeContructionSites = activeRoom.find(FIND_MY_CONSTRUCTION_SITES)
-    if (activeContructionSites.length) {
-      let constructionSummary = `Active construction: total (${activeContructionSites.length})`
-      activeContructionSites.forEach((site) => {
-        let progress = site.progress / site.progressTotal * 100
-        constructionSummary += `, ${site.structureType} (${progress.toFixed(2)}%)`
-      })
-
-      logHelper.log(constructionSummary, LOG_LEVEL.INFO)
-    }
-
+    let constructionManager = new constructionManagerLib(activeRoom)
     var creepManager = new creepManagerLib(Game.creeps)
 
-    let creepBody = [WORK, CARRY, CARRY, MOVE, MOVE, MOVE]
+    let creepBody = [WORK, CARRY, MOVE]
     creepManager.maybeSpawn(activeSpawn, creepBody, 'harvester')
     creepManager.maybeSpawn(activeSpawn, creepBody, 'upgrader')
     creepManager.maybeSpawn(activeSpawn, creepBody, 'builder')
