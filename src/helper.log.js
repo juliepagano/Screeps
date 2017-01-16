@@ -2,7 +2,7 @@ const LOG_LEVEL = require('constants.log')
 
 const logHelper = {
   log (message, level) {
-    const currentLogLevel = Memory.logLevel
+    const currentLogLevel = Memory.logLevel || LOG_LEVEL.ERROR
 
     // Do not log.
     if (currentLogLevel === LOG_LEVEL.NONE ||

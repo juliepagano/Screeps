@@ -125,7 +125,9 @@ let creepManager = class creepManager {
     let body = [WORK, CARRY, MOVE]
 
     for (let role in this.creepRoles) {
-      this.maybeSpawn(spawn, body, role)
+      if (this.maybeSpawn(spawn, body, role)) {
+        return
+      }
     }
   }
 
@@ -133,14 +135,14 @@ let creepManager = class creepManager {
   maybeSpawn (spawn, body, role) {
     if (!this.shouldSpawnMore(role)) {
       logHelper.log('Already have max ' + role)
-      return
+      return false
     }
 
     let bodyCost = this.getBodyCost(body)
     let availableEnergy = spawn.room.energyAvailable
     if (bodyCost > availableEnergy) {
       logHelper.log(`Not enough energy to spawn ${role}. Have ${availableEnergy}. Need ${bodyCost}`)
-      return
+      return false
     }
 
     let ok = 0
@@ -150,11 +152,12 @@ let creepManager = class creepManager {
       if (typeof response === 'string') {
         logHelper.log(`Successfully created new ${role} creep named ${response}.`,
           LOG_LEVEL.INFO)
-        return
+        return true
       }
     }
 
     logHelper.log(`Something went wrong creating ${role} creep.`, LOG_LEVEL.ERROR)
+    return false
   }
 
   shouldSpawnMore (role) {
