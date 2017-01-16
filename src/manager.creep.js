@@ -1,16 +1,18 @@
-var logHelper = require('helper.log');
+let logHelper = require('helper.log');
 
-var roleHarvester = require('role.harvester');
-var roleUpgrader = require('role.upgrader');
-var roleBuilder = require('role.builder');
-var roleRepairer = require('role.repairer');
+let roleHarvester = require('role.harvester');
+let roleUpgrader = require('role.upgrader');
+let roleBuilder = require('role.builder');
+let roleRepairer = require('role.repairer');
 
 const LOG_LEVEL = require('constants.log')
 
-var bodyCosts = {}
+let bodyCosts = {}
 bodyCosts[MOVE] = 50
 bodyCosts[WORK] = 100
 bodyCosts[CARRY] = 50
+
+
 
 let creepManager = class creepManager {
   constructor (creeps) {
@@ -94,7 +96,7 @@ let creepManager = class creepManager {
   }
 
   getBodyCost (body) {
-    var cost = 0
+    let cost = 0
     body.map((item) => {
       cost = cost + bodyCosts[item]
     })
