@@ -1,11 +1,12 @@
-var logHelper = require('helper.log');
+let logHelper = require('helper.log')
+let memoryHelper = require('helper.memory')
 
-var constructionManagerLib = require('manager.construction')
-var controllerManagerLib = require('manager.controller')
-var creepManagerLib = require('manager.creep')
-var roomManagerLib = require('manager.room')
-var spawnManagerLib = require('manager.spawn')
-var structureManagerLib = require('manager.structure')
+let constructionManagerLib = require('manager.construction')
+let controllerManagerLib = require('manager.controller')
+let creepManagerLib = require('manager.creep')
+let roomManagerLib = require('manager.room')
+let spawnManagerLib = require('manager.spawn')
+let structureManagerLib = require('manager.structure')
 
 const LOG_LEVEL = require('constants.log')
 
@@ -26,11 +27,15 @@ module.exports.loop = function () {
 
     let constructionManager = new constructionManagerLib(activeRoom)
     let structureManager = new structureManagerLib(activeRoom)
-    var creepManager = new creepManagerLib(Game.creeps, activeRoom)
+
+    let creeps = roomManager.getCreeps()
+    let creepManager = new creepManagerLib(creeps)
 
     creepManager.spawnCreeps(activeSpawn)
 
     creepManager.runCreeps()
+
+    memoryHelper.cleanupZombieCreeps()
 
     logHelper.log('====================================================',
         LOG_LEVEL.INFO)

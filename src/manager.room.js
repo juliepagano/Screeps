@@ -23,6 +23,10 @@ let roomManager = class roomManager {
     return this.room.find(FIND_MY_SPAWNS)
   }
 
+  getCreeps () {
+    return this.room.find(FIND_MY_CREEPS)
+  }
+
   getSummary () {
     if (!this.room) {
       return 'NO ROOM'

@@ -13,9 +13,7 @@ bodyCosts[WORK] = 100
 bodyCosts[CARRY] = 50
 
 let creepManager = class creepManager {
-  constructor (creeps, room) {
-    this.room = room
-
+  constructor (creeps) {
     this.creepRoles = {
       harvester: {
         max: 2,
@@ -38,18 +36,15 @@ let creepManager = class creepManager {
     this.creeps = creeps
     this.totalCreeps = 0
 
-    this.cleanupZombieCreeps(creeps)
-    this.initCreeps(creeps)
+    this.initCreeps()
 
     logHelper.log(JSON.stringify(this.creepRoles), LOG_LEVEL.DEBUG)
-
 
     logHelper.log(this.getCreepSummary(), LOG_LEVEL.INFO)
   }
 
-  initCreeps (creeps) {
-    for (let name in creeps) {
-      let creep = creeps[name]
+  initCreeps () {
+    this.creeps.forEach((creep) => {
       let role = creep.memory.role
 
       this.totalCreeps++
@@ -69,20 +64,7 @@ let creepManager = class creepManager {
       if (!this.creepRoles[role].creeps) {
         this.creepRoles[role].creeps = []
       }
-      this.creepRoles[role].creeps.push(name)
-    }
-  }
-
-  cleanupZombieCreeps (creeps) {
-    const memoryCreepNames = _.keys(Memory.creeps)
-    const gameCreepNames = _.keys(creeps)
-    const zombieNames = _.difference(memoryCreepNames, gameCreepNames)
-
-    logHelper.log(`${zombieNames.length} zombies: ${zombieNames.join(', ')}`,
-      LOG_LEVEL.DEBUG)
-    zombieNames.forEach((name) => {
-      delete Memory.creeps[name]
-      logHelper.log(`Cleared zombie creep: ${name}`, LOG_LEVEL.DEBUG);
+      this.creepRoles[role].creeps.push(creep.name)
     })
   }
 
