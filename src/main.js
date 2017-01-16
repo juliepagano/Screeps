@@ -27,11 +27,7 @@ module.exports.loop = function () {
     let structureManager = new structureManagerLib(activeRoom)
     var creepManager = new creepManagerLib(Game.creeps)
 
-    let creepBody = [WORK, CARRY, MOVE]
-    creepManager.maybeSpawn(activeSpawn, creepBody, 'harvester')
-    creepManager.maybeSpawn(activeSpawn, creepBody, 'upgrader')
-    creepManager.maybeSpawn(activeSpawn, creepBody, 'builder')
-    creepManager.maybeSpawn(activeSpawn, creepBody, 'repairer')
+    creepManager.spawnCreeps(activeSpawn)
 
     creepManager.runCreeps()
 

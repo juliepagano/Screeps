@@ -119,6 +119,14 @@ let creepManager = class creepManager {
     return cost
   }
 
+  spawnCreeps (spawn) {
+    let body = [WORK, CARRY, MOVE]
+
+    for (let role in this.creepRoles) {
+      this.maybeSpawn(spawn, body, role)
+    }
+  }
+
   // Spawn if not beyond max
   maybeSpawn (spawn, body, role) {
     if (!this.shouldSpawnMore(role)) {
