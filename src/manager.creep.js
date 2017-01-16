@@ -13,22 +13,24 @@ bodyCosts[WORK] = 100
 bodyCosts[CARRY] = 50
 
 let creepManager = class creepManager {
-  constructor (creeps) {
+  constructor (creeps, room) {
+    this.room = room
+
     this.creepRoles = {
       harvester: {
-        max: 3,
+        max: 1,
         commands: roleHarvester
       },
       upgrader: {
-        max: 3,
+        max: 1,
         commands: roleUpgrader
       },
       builder: {
-        max: 2,
+        max: 1,
         commands: roleBuilder
       },
       repairer: {
-        max: 2,
+        max: 1,
         commands: roleRepairer
       }
     }

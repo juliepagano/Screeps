@@ -13,7 +13,7 @@ module.exports.loop = function () {
     logHelper.log('====================LOOP STARTED====================',
         LOG_LEVEL.INFO)
 
-    let activeRoomName = 'W17N76'
+    let activeRoomName = _.keys(Game.rooms)[0]
     let activeRoom = Game.rooms[activeRoomName]
     logHelper.log(`Active room: ${activeRoomName} (${activeRoom.mode}).`, LOG_LEVEL.INFO)
 
@@ -25,7 +25,7 @@ module.exports.loop = function () {
 
     let constructionManager = new constructionManagerLib(activeRoom)
     let structureManager = new structureManagerLib(activeRoom)
-    var creepManager = new creepManagerLib(Game.creeps)
+    var creepManager = new creepManagerLib(Game.creeps, activeRoom)
 
     creepManager.spawnCreeps(activeSpawn)
 
