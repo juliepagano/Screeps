@@ -69,7 +69,7 @@ let creepManager = class creepManager {
       if (!this.creepRoles[role].creeps) {
         this.creepRoles[role].creeps = []
       }
-      this.creepRoles[role].creeps.push(creep)
+      this.creepRoles[role].creeps.push(name)
     }
   }
 
@@ -100,14 +100,13 @@ let creepManager = class creepManager {
 
   runCreeps () {
     for (let role in this.creepRoles) {
-      let roleCreeps = this.creepRoles[role].creeps
+      let names = this.creepRoles[role].creeps || []
       let commands = this.creepRoles[role].commands
 
-      if (roleCreeps && commands) {
-        for (let i = 0; i < roleCreeps.length; i++) {
-          let creep = roleCreeps[i]
-          commands.run(creep)
-        }
+      if (names.length && commands) {
+        names.forEach((name) => {
+          commands.run(Game.creeps[name])
+        })
       }
     }
   }
