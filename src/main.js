@@ -6,11 +6,6 @@ var creepManagerLib = require('manager.creep')
 var spawnManagerLib = require('manager.spawn')
 var structureManagerLib = require('manager.structure')
 
-var roleBuilder = require('role.builder');
-var roleHarvester = require('role.harvester');
-var roleRepairer = require('role.repairer');
-var roleUpgrader = require('role.upgrader');
-
 const LOG_LEVEL = require('constants.log')
 
 
