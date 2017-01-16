@@ -2,7 +2,7 @@ var logHelper = require('helper.log');
 
 const LOG_LEVEL = require('constants.log')
 
-let ignoreStructures = [STRUCTURE_WALL]
+let ignoreStructures = [STRUCTURE_WALL, STRUCTURE_KEEPER_LAIR]
 
 let structureManager = class structureManager {
   constructor (room) {
