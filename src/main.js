@@ -3,6 +3,7 @@ var logHelper = require('helper.log');
 var constructionManagerLib = require('manager.construction')
 var controllerManagerLib = require('manager.controller')
 var creepManagerLib = require('manager.creep')
+var roomManagerLib = require('manager.room')
 var spawnManagerLib = require('manager.spawn')
 var structureManagerLib = require('manager.structure')
 
@@ -15,12 +16,12 @@ module.exports.loop = function () {
 
     let activeRoomName = _.keys(Game.rooms)[0]
     let activeRoom = Game.rooms[activeRoomName]
-    logHelper.log(`Active room: ${activeRoomName} (${activeRoom.mode}).`, LOG_LEVEL.INFO)
+
+    let roomManager = new roomManagerLib(activeRoom)
 
     let controllerManager = new controllerManagerLib(activeRoom)
 
-    let activeSpawnName = 'Spawn1'
-    let activeSpawn = Game.spawns[activeSpawnName]
+    let activeSpawn = roomManager.getSpawn()
     let spawnManager = new spawnManagerLib(activeSpawn)
 
     let constructionManager = new constructionManagerLib(activeRoom)
