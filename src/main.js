@@ -15,6 +15,8 @@ module.exports.loop = function () {
     logHelper.log('====================LOOP STARTED====================',
         LOG_LEVEL.INFO)
 
+    let creepConfig = {}
+
     let activeRoomName = _.keys(Game.rooms)[0]
     let activeRoom = Game.rooms[activeRoomName]
 
@@ -26,10 +28,21 @@ module.exports.loop = function () {
     let spawnManager = new spawnManagerLib(activeSpawn)
 
     let constructionManager = new constructionManagerLib(activeRoom)
+    let constructionCount = constructionManager.getTotal()
+    creepConfig.builder = {
+      min: constructionCount ? 1 : 0,
+      max: constructionCount
+    }
+
     let structureManager = new structureManagerLib(activeRoom)
+    let repairCount = structureManager.getRepairTotal()
+    creepConfig.repairer = {
+      min: repairCount ? 1 : 0,
+      max: repairCount
+    }
 
     let creeps = roomManager.getCreeps()
-    let creepManager = new creepManagerLib(creeps)
+    let creepManager = new creepManagerLib(creeps, creepConfig)
 
     creepManager.spawnCreeps(activeSpawn)
 

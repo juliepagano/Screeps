@@ -11,6 +11,9 @@ let structureManager = class structureManager {
     this.structureSummary = {}
     this.initStructures()
 
+    this.total = 0
+    this.totalRepair = 0
+
     let summary = this.getSummary()
     if (summary) {
       logHelper.log(summary, LOG_LEVEL.INFO)
@@ -36,11 +39,17 @@ let structureManager = class structureManager {
       }
 
       this.structureSummary[type].count++
+      this.total++
 
       if (structure.hits < structure.hitsMax) {
         this.structureSummary[type].needRepair++
+        this.totalRepair++
       }
     })
+  }
+
+  getRepairTotal () {
+    return this.totalRepair
   }
 
   getSummary () {

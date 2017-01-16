@@ -12,6 +12,10 @@ let constructionManager = class constructionManager {
     }
   }
 
+  getTotal () {
+    return this.contructionSites.length
+  }
+
   getSummary () {
     if (!this.contructionSites.length) {
       // No construction

@@ -12,28 +12,33 @@ bodyCosts[MOVE] = 50
 bodyCosts[WORK] = 100
 bodyCosts[CARRY] = 50
 
-
+let defaultConfig = {
+  upgrader: {
+    min: 1,
+    max: 1,
+    commands: roleUpgrader
+  },
+  harvester: {
+    min: 1,
+    max: 1,
+    commands: roleHarvester
+  },
+  builder: {
+    min: 1,
+    max: 1,
+    commands: roleBuilder
+  },
+  repairer: {
+    min: 1,
+    max: 1,
+    commands: roleRepairer
+  }
+}
 
 let creepManager = class creepManager {
-  constructor (creeps) {
-    this.creepRoles = {
-      harvester: {
-        max: 2,
-        commands: roleHarvester
-      },
-      upgrader: {
-        max: 2,
-        commands: roleUpgrader
-      },
-      builder: {
-        max: 2,
-        commands: roleBuilder
-      },
-      repairer: {
-        max: 2,
-        commands: roleRepairer
-      }
-    }
+  constructor (creeps, config) {
+    this.creepRoles = _.merge({}, defaultConfig, config)
+    console.log(JSON.stringify(this.creepRoles))
 
     this.creeps = creeps
     this.totalCreeps = 0
